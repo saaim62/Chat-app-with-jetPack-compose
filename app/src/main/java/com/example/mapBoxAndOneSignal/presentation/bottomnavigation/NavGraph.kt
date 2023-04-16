@@ -1,5 +1,6 @@
 package com.example.mapBoxAndOneSignal.presentation.bottomnavigation
 
+import MapBoxScreen
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.LinearEasing
@@ -8,72 +9,38 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.mapBoxAndOneSignal.presentation.auth.signIn.SignInScreen
-import com.example.mapBoxAndOneSignal.presentation.auth.signUp.SignUpScreen
 import com.example.mapBoxAndOneSignal.presentation.chat.ChatScreen
+import com.example.mapBoxAndOneSignal.presentation.designScreen.UIScreen
 import com.example.mapBoxAndOneSignal.presentation.profile.ProfileScreen
 import com.example.mapBoxAndOneSignal.presentation.userlist.Userlist
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.mapbox.maps.Style
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     keyboardController: SoftwareKeyboardController
 ) {
-    AnimatedNavHost(navController, startDestination = BottomNavItem.SignIn.fullRoute) {
-        //SIGN IN SCREEN
+    AnimatedNavHost(navController, startDestination = BottomNavItem.MapBox.fullRoute) {
+
         composable(
-            BottomNavItem.SignIn.fullRoute,
+            BottomNavItem.MapBox.fullRoute,
             arguments = listOf(
-                navArgument("emailFromSignUp") {
+                navArgument("MapBox") {
                     type = NavType.StringType
                     defaultValue = ""
                 }
             ),
             enterTransition = {
                 when (initialState.destination.route) {
-//                    BottomNavItem.SignUp.fullRoute ->
-//                        slideIntoContainer(
-//                            AnimatedContentScope.SlideDirection.Right,
-//                            animationSpec = tween(700)
-//                        )
-                    else -> null
-                }
-
-            }
-        ) {
-            val emailFromSignUp = remember {
-                it.arguments?.getString("emailFromSignUp")
-            }
-
-            SignInScreen(
-                emailFromSignUp = emailFromSignUp ?: "",
-                navController = navController,
-                snackbarHostState = snackbarHostState,
-                keyboardController = keyboardController
-            )
-        }
-
-        composable(
-            BottomNavItem.SignUp.fullRoute,
-            arguments = listOf(
-                navArgument("emailFromSignIn") {
-                    type = NavType.StringType
-                    defaultValue = ""
-                }
-            ),
-            enterTransition = {
-                when (initialState.destination.route) {
-                    BottomNavItem.SignIn.fullRoute ->
+                    BottomNavItem.UserList.fullRoute ->
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(700)
@@ -83,7 +50,7 @@ fun NavGraph(
 
             }, exitTransition = {
                 when (targetState.destination.route) {
-                    BottomNavItem.SignIn.fullRoute ->
+                    BottomNavItem.UserList.fullRoute ->
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Right,
                             animationSpec = tween(700)
@@ -92,15 +59,41 @@ fun NavGraph(
                 }
             }
         ) {
-            val emailFromSignIn = remember {
-                it.arguments?.getString("emailFromSignIn")
+            MapBoxScreen(onMapReady = { mapView ->
+                mapView.loadStyleJson(Style.MAPBOX_STREETS)
+            })
+        }
+
+        composable(
+            BottomNavItem.UI.fullRoute,
+            arguments = listOf(
+                navArgument("UI") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            ),
+            enterTransition = {
+                when (initialState.destination.route) {
+                    BottomNavItem.MapBox.fullRoute ->
+                        slideIntoContainer(
+                            AnimatedContentScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    else -> null
+                }
+
+            }, exitTransition = {
+                when (targetState.destination.route) {
+                    BottomNavItem.MapBox.fullRoute ->
+                        slideOutOfContainer(
+                            AnimatedContentScope.SlideDirection.Right,
+                            animationSpec = tween(700)
+                        )
+                    else -> null
+                }
             }
-            SignUpScreen(
-                emailFromSignIn = emailFromSignIn ?: "",
-                navController = navController,
-                snackbarHostState = snackbarHostState,
-                keyboardController = keyboardController
-            )
+        ) {
+            UIScreen()
         }
 
         composable(
@@ -140,13 +133,6 @@ fun NavGraph(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(250, easing = LinearEasing)
                         )
-//                    BottomNavItem.SignIn.fullRoute ->
-//                        slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(700))
-//                    BottomNavItem.SignUp.fullRoute ->
-//                        slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(700))
-//                    BottomNavItem.Profile.fullRoute ->
-//                        slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(700))
-
                     else -> null
                 }
 
@@ -212,7 +198,6 @@ fun NavGraph(
                 registerUUID = registerUUID ?: "",
                 oneSignalUserId = oneSignalUserId ?: "",
                 navController = navController,
-                snackbarHostState = snackbarHostState,
                 keyboardController = keyboardController
             )
 

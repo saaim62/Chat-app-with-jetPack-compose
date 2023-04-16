@@ -96,20 +96,4 @@ class ChatScreenViewModel @Inject constructor(
             }
         }
     }
-
-    fun blockFriendToFirebase(registerUUID: String) {
-        viewModelScope.launch {
-            chatScreenUseCases.blockFriendToFirebase.invoke(registerUUID).collect { response ->
-                when (response) {
-                    is Response.Loading -> {
-                        toastMessage.value = ""
-                    }
-                    is Response.Success -> {
-                        toastMessage.value = "Friend Blocked"
-                    }
-                    is Response.Error -> {}
-                }
-            }
-        }
-    }
 }

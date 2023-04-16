@@ -25,7 +25,6 @@ import com.example.mapBoxAndOneSignal.presentation.bottomnavigation.BottomNaviga
 import com.example.mapBoxAndOneSignal.presentation.bottomnavigation.NavGraph
 import com.example.mapBoxAndOneSignal.presentation.commonComponents.ChatSnackBar
 import com.example.mapBoxAndOneSignal.ui.theme.ChatWithMeTheme
-import com.example.mapBoxAndOneSignal.MainViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.onesignal.OSSubscriptionObserver
@@ -34,24 +33,15 @@ import com.onesignal.OneSignal
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity(), OSSubscriptionObserver {
+class MainActivity : ComponentActivity() {
     private lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mainViewModel = defaultViewModelProviderFactory.create(MainViewModel::class.java)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Logging set to help debug issues, remove before releasing your app.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
-
-        // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(Constants.ONESIGNAL_APP_ID)
-
-        // OneSignal Enable Notification
-        OneSignal.addSubscriptionObserver(this)
         OneSignal.disablePush(false)
 
         setContent {
@@ -59,19 +49,6 @@ class MainActivity : ComponentActivity(), OSSubscriptionObserver {
             ChatWithMeTheme {
                 MainScreenView()
             }
-        }
-    }
-
-    override fun onOSSubscriptionChanged(p0: OSSubscriptionStateChanges?) {
-        if (p0!!.from.isSubscribed &&
-            !p0.to.isSubscribed
-        ) {
-            println("Notifications Disabled!")
-        }
-        if (!p0.from.isSubscribed &&
-            p0.to.isSubscribed
-        ) {
-            println("Notifications Enabled!")
         }
     }
 
@@ -123,8 +100,8 @@ fun MainScreenView() {
         },
         bottomBar = {
             bottomBarState.value =
-                currentRoute != BottomNavItem.SignIn.fullRoute &&
-                        currentRoute != BottomNavItem.SignUp.fullRoute &&
+                currentRoute != BottomNavItem.Profile.fullRoute &&
+                        currentRoute != BottomNavItem.Profile.fullRoute &&
                         currentRoute != BottomNavItem.Chat.fullRoute
             BottomNavigation(
                 navController = navController,
@@ -138,16 +115,11 @@ fun MainScreenView() {
                 .fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-//            HorizontalPager(
-//                count = items.
-////                state = pagerState
-//            ) {
             NavGraph(
                 navController = navController,
                 snackbarHostState = snackbarHostState,
                 keyboardController = keyboardController!!
             )
-//            }
         }
     }
 }

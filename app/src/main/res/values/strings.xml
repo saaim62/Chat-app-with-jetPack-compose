@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MapBoxOneSignal</string>
+    <string name="mapbox_access_token">sk.eyJ1Ijoic2FhaW02MiIsImEiOiJjbGdqYWZ1NjAxM3JrM2tycjRueWNhY2NuIn0.1uUuGo8C7Q9R9w_nvQuMFw</string>
 </resources>

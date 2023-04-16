@@ -15,14 +15,9 @@ import com.example.mapBoxAndOneSignal.presentation.chat.chatrow.chatbubble.ChatB
 import com.example.mapBoxAndOneSignal.presentation.chat.chatrow.chatbubble.TextMessageInsideBubble
 import com.example.mapBoxAndOneSignal.ui.theme.spacing
 
-var isRecipientRegistered = true
-var recipientOriginalName = "Some user"
 @Composable
 fun ReceivedMessageRow(
     text: String,
-    opponentName: String,
-    quotedMessage: String? = null,
-    quotedImage: Int? = null,
     messageTime: String,
 ) {
     Column(
@@ -37,34 +32,12 @@ fun ReceivedMessageRow(
                 bottom = MaterialTheme.spacing.extraSmall
             )
     ) {
-        //ChatBubble
         ChatBubbleConstraints(
             modifier = Modifier
                 .clip(RoundedCornerShape(bottomEnd = 16.dp, topEnd = 16.dp, bottomStart = 16.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable { },
             content = {
-//                RecipientName(
-//                    name = opponentName,
-//                    isName = isRecipientRegistered,
-//                    altName = recipientOriginalName
-//                )
-//                if (quotedMessage != null || quotedImage != null) {
-//                    // 💬 Quoted message
-//                    QuotedMessageAlt(
-//                        modifier = Modifier
-//                            .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-//                            // 🔥 This is required to set Surface height before text is set
-//                            .height(IntrinsicSize.Min)
-//                            .background(Color(0xffECEFF1), shape = RoundedCornerShape(8.dp))
-//                            .clip(shape = RoundedCornerShape(8.dp))
-//                            .clickable {
-//
-//                            },
-//                        quotedMessage = quotedMessage,
-//                        quotedImage = quotedImage
-//                    )
-//                }
                 TextMessageInsideBubble(
                     modifier = Modifier.padding(
                         start = MaterialTheme.spacing.extraSmall,
@@ -84,19 +57,6 @@ fun ReceivedMessageRow(
                         )
                     }
                 )
-//                ChatFlexBoxLayout(
-//                    modifier = Modifier.padding(start = 2.dp,  end = 4.dp),
-//                    text = text,
-//                    messageStat = {
-////                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-//                            Text(
-//                                modifier = Modifier.padding(top = 1.dp, bottom = 1.dp, end = 4.dp),
-//                                text = messageTime,
-//                                fontSize = 12.sp
-//                            )
-////                        }
-//                    }
-//                )
             }
         )
     }

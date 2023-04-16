@@ -19,9 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mapBoxAndOneSignal.core.SnackbarController
 import com.example.mapBoxAndOneSignal.domain.model.User
-import com.example.mapBoxAndOneSignal.domain.model.UserStatus
 import com.example.mapBoxAndOneSignal.presentation.bottomnavigation.BottomNavItem
-import com.example.mapBoxAndOneSignal.presentation.commonComponents.LogOutCustomText
 import com.example.mapBoxAndOneSignal.presentation.profile.components.ChooseProfilePicFromGallery
 import com.example.mapBoxAndOneSignal.presentation.profile.components.ProfileAppBar
 import com.example.mapBoxAndOneSignal.presentation.profile.components.ProfileTextField
@@ -72,20 +70,21 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
 
-    var updatedImage by remember {
+    val updatedImage by remember {
         mutableStateOf<Uri?>(null)
     }
     val isUserSignOut = profileViewModel.isUserSignOutState.value
     LaunchedEffect(key1 = isUserSignOut) {
         if (isUserSignOut) {
             navController.popBackStack()
-            navController.navigate(BottomNavItem.SignIn.fullRoute)
+            navController.navigate(BottomNavItem.Profile.fullRoute)
         }
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentHeight().imePadding()
+            .wrapContentHeight()
+            .imePadding()
     ) {
         ProfileAppBar()
         Surface(
@@ -149,9 +148,6 @@ fun ProfileScreen(
                         enabled = updatedImage != null || name != "" || surName != "" || bio != "" || phoneNumber != ""
                     ) {
                         Text(text = "Save Profile", style = MaterialTheme.typography.titleMedium)
-                    }
-                    LogOutCustomText {
-                        profileViewModel.setUserStatusToFirebaseAndSignOut(UserStatus.OFFLINE)
                     }
                     Spacer(modifier = Modifier.height(50.dp))
 

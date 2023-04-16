@@ -66,14 +66,12 @@ fun TextMessageInsideBubble(
             style = style,
             maxLines = maxLines,
             onTextLayout = { textLayoutResult: TextLayoutResult ->
-                // maxWidth of text constraint returns parent maxWidth - horizontal padding
                 chatRowData.lineCount = textLayoutResult.lineCount
                 chatRowData.lastLineWidth =
                     textLayoutResult.getLineRight(chatRowData.lineCount - 1)
                 chatRowData.textWidth = textLayoutResult.size.width
             }
         )
-
         messageStat()
     }
 
@@ -85,40 +83,23 @@ fun TextMessageInsideBubble(
         if (measurables.size != 2)
             throw IllegalArgumentException("There should be 2 components for this layout")
 
-//        println("⚠️ CHAT constraints: $constraints")
-
         val placeables: List<Placeable> = measurables.map { measurable ->
-            // Measure each child maximum constraints since message can cover all of the available
-            // space by parent
             measurable.measure(Constraints(0, constraints.maxWidth))
         }
 
         val message = placeables.first()
         val status = placeables.last()
 
-        // calculate chat row dimensions are not  based on message and status positions
         if ((chatRowData.rowWidth == 0 || chatRowData.rowHeight == 0) || chatRowData.text != text) {
-            // Constrain with max width instead of longest sibling
-            // since this composable can be longest of siblings after calculation
             chatRowData.parentWidth = constraints.maxWidth
-            calculateChatWidthAndHeight(text, chatRowData, message, status)
-            // Parent width of this chat row is either result of width calculation
-            // or quote or other sibling width if they are longer than calculated width.
-            // minWidth of Constraint equals (text width + horizontal padding)
+            calculateChatWidthAndHeight(chatRowData, message, status)
             chatRowData.parentWidth =
                 chatRowData.rowWidth.coerceAtLeast(minimumValue = constraints.minWidth)
         }
-
-//        println("⚠️⚠️ CHAT after calculation-> CHAT_ROW_DATA: $chatRowData")
-
-        // Send measurement results if requested by Composable
         onMeasure?.invoke(chatRowData)
-
         layout(width = chatRowData.parentWidth, height = chatRowData.rowHeight) {
 
             message.placeRelative(0, 0)
-            // set left of status relative to parent because other elements could result this row
-            // to be long as longest composable
             status.placeRelative(
                 chatRowData.parentWidth - status.width,
                 chatRowData.rowHeight - status.height

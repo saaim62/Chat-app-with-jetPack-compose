@@ -2,7 +2,6 @@ package com.example.mapBoxAndOneSignal.presentation.chat.chatrow.chatlayout
 
 data class ChatRowData(
     var text: String = "",
-    // Width of the text without padding
     var textWidth: Int = 0,
     var lastLineWidth: Float = 0f,
     var lineCount: Int = 0,

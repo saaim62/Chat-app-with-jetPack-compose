@@ -37,15 +37,9 @@ fun ChatScreen(
     oneSignalUserId: String,
     chatViewModel: ChatScreenViewModel = hiltViewModel(),
     navController: NavHostController,
-    snackbarHostState: SnackbarHostState,
     keyboardController: SoftwareKeyboardController
 ) {
-    val toastMessage = chatViewModel.toastMessage.value
-    LaunchedEffect(key1 = toastMessage) {
-        if (toastMessage != "") {
-            SnackbarController(this).showSnackbar(snackbarHostState, toastMessage, "Close")
-        }
-    }
+
     chatViewModel.loadMessagesFromFirebase(chatRoomUUID, opponentUUID, registerUUID)
     ChatScreenContent(
         chatRoomUUID,
@@ -96,9 +90,7 @@ fun ChatScreenContent(
     val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = messages.size)
     val messagesLoadedFirstTime = chatViewModel.messagesLoadedFirstTime.value
     val messageInserted = chatViewModel.messageInserted.value
-    var isChatInputFocus by remember {
-        mutableStateOf(false)
-    }
+
     LaunchedEffect(key1 = messagesLoadedFirstTime, messages, messageInserted) {
         if (messages.isNotEmpty()) {
             scrollState.scrollToItem(
@@ -140,10 +132,6 @@ fun ChatScreenContent(
             }, onUserProfilePictureClick = {
                 showDialog = true
             },
-            onMoreDropDownBlockUserClick = {
-                chatViewModel.blockFriendToFirebase(registerUUID)
-                navController.navigate(BottomNavItem.UserList.fullRoute)
-            }
         )
         LazyColumn(
             modifier = Modifier
@@ -160,15 +148,12 @@ fun ChatScreenContent(
                     true -> {
                         ReceivedMessageRow(
                             text = message.chatMessage.message,
-                            opponentName = opponentName,
-                            quotedMessage = null,
                             messageTime = sdf.format(message.chatMessage.date),
                         )
                     }
                     false ->{
                         SentMessageRow(
                             text = message.chatMessage.message,
-                            quotedMessage = null,
                             messageTime = sdf.format(message.chatMessage.date),
                             messageStatus = MessageStatus.valueOf(message.chatMessage.status)
                         )
@@ -186,9 +171,6 @@ fun ChatScreenContent(
                     oneSignalUserId
                 )
             },
-            onFocusEvent = {
-                isChatInputFocus = it
-            }
         )
     }
 }

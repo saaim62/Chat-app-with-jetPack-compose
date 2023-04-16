@@ -23,7 +23,6 @@ import com.example.mapBoxAndOneSignal.ui.theme.spacing
 internal fun ChatInput(
     modifier: Modifier = Modifier,
     onMessageChange: (String) -> Unit,
-    onFocusEvent: (Boolean) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -31,34 +30,17 @@ internal fun ChatInput(
     var input by remember { mutableStateOf(TextFieldValue("")) }
     val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
 
-//    val imePaddingValues = rememberInsetsPaddingValues(insets = LocalWindowInsets.current.ime)
-//    val imeBottomPadding = imePaddingValues.calculateBottomPadding().value.toInt()
-    val imePaddingValues = PaddingValues()
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = MaterialTheme.spacing.extraSmall),
         verticalAlignment = Alignment.Bottom
     ) {
-
-//        ChatTextField(
-//            modifier = modifier.weight(1f).focusable(true),
-//            input = input,
-//            empty = textEmpty,
-//            onValueChange = {
-//                input = it
-//            }, onFocusEvent = {
-//                onFocusEvent(it)
-//            }
-//        )
-//
-//        Spacer(modifier = Modifier.width(6.dp))
         TextField(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.extraLarge)
                 .weight(1f)
                 .focusable(true),
-//                .padding(bottom = MaterialTheme.spacing.extraSmall),
             value = input,
             onValueChange = { input = it },
             colors = TextFieldDefaults.textFieldColors(

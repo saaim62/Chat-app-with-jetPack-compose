@@ -6,7 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,10 +26,7 @@ fun BottomNavigation(
     bottomBarState: Boolean,
     snackbarHostState: SnackbarHostState,
 ) {
-    val items = listOf(
-        BottomNavItem.Profile,
-        BottomNavItem.UserList
-    )
+
     val userListViewModel: UserListViewModel = hiltViewModel()
 
     val toastMessage = userListViewModel.toastMessage.value
@@ -47,78 +44,60 @@ fun BottomNavigation(
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
-//            IconButton(onClick = {
-//                navController.navigate(BottomNavItem.Profile.screen_route) {
-//                    navController.graph.startDestinationRoute?.let { screen_route ->
-//                        popUpTo(screen_route) {
-//                            saveState = true
-//                        }
-//                    }
-//                    launchSingleTop = true
-//                    restoreState = true
-//                }
-//            }) {
-//                if (currentRoute == BottomNavItem.Profile.screen_route) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Person,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.primary
-//                    )
-//                } else {
-//                    Icon(imageVector = Icons.Outlined.Person, contentDescription = null)
-//                }
-//
-//            }
-//            IconButton(onClick = {
-//                navController.navigate(BottomNavItem.UserList.screen_route) {
-//                    navController.graph.startDestinationRoute?.let { screen_route ->
-//                        popUpTo(screen_route) {
-//                            saveState = true
-//                        }
-//                    }
-//                    launchSingleTop = true
-//                    restoreState = true
-//                }
-//            }) {
-//                if (currentRoute == BottomNavItem.UserList.screen_route) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Chat,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.primary
-//                    )
-//                } else {
-//                    Icon(imageVector = Icons.Outlined.Chat, contentDescription = null)
-//                }
-//            }
-            items.forEach { item ->
-                CustomNavItem(
-                    onClick = {
-                        navController.navigate(item.screen_route) {
-                            navController.graph.startDestinationRoute?.let { screen_route ->
-                                popUpTo(screen_route) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    iconSelected = {
-                        if (currentRoute == item.screen_route){
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.title,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }else{
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.title,
-                            )
-                        }
+
+            CustomNavItem(
+                onClick = {
+                    if (currentRoute == BottomNavItem.MapBox.fullRoute) {
+                        navController.popBackStack()
+                        navController.navigate(BottomNavItem.UserList.fullRoute)
+                    } else {
+                        navController.popBackStack()
+                        navController.navigate(BottomNavItem.MapBox.fullRoute)
                     }
-                )
-            }
+                },
+                iconSelected = {
+                    if (currentRoute == BottomNavItem.MapBox.fullRoute) {
+                        Icon(
+                            imageVector = BottomNavItem.UserList.icon,
+                            contentDescription = BottomNavItem.UserList.title,
+                        )
+                    } else {
+                        Icon(
+                            imageVector = BottomNavItem.MapBox.icon,
+                            contentDescription = BottomNavItem.MapBox.title,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            )
+
+            Spacer(Modifier.weight(10f, true))
+            CustomNavItem(
+                onClick = {
+                    if (currentRoute == BottomNavItem.MapBox.screen_route) {
+                        navController.popBackStack()
+                        navController.navigate(BottomNavItem.UI.fullRoute)
+                    } else if (currentRoute == BottomNavItem.UI.screen_route) {
+                        navController.popBackStack()
+                        navController.navigate(BottomNavItem.UserList.fullRoute)
+                    }
+                },
+                iconSelected = {
+                    if (currentRoute == BottomNavItem.MapBox.screen_route) {
+                        Icon(
+                            imageVector = BottomNavItem.UI.icon,
+                            contentDescription = BottomNavItem.UI.title,
+                        )
+                    } else if (currentRoute == BottomNavItem.UI.screen_route) {
+                        Icon(
+                            imageVector = BottomNavItem.UserList.icon,
+                            contentDescription = BottomNavItem.UserList.title,
+                        )
+                    }
+                }
+            )
+
+
             Spacer(Modifier.weight(1f, true))
             if (currentRoute == BottomNavItem.UserList.screen_route) {
                 var showAlertDialog by remember {
@@ -145,28 +124,6 @@ fun BottomNavigation(
                     Icon(imageVector = Icons.Filled.Add, contentDescription = null)
                 }
             }
-//            items.forEach { item ->
-//                NavigationBarItem(
-//                    icon = {
-//                        Icon(imageVector = item.icon, contentDescription = item.title)
-//                    },
-//                    label = {
-//                        Text(item.title)
-//                    },
-//                    selected = currentRoute == item.screen_route,
-//                    onClick = {
-//                        navController.navigate(item.screen_route) {
-//                            navController.graph.startDestinationRoute?.let { screen_route ->
-//                                popUpTo(screen_route) {
-//                                    saveState = true
-//                                }
-//                            }
-//                            launchSingleTop = true
-//                            restoreState = true
-//                        }
-//                    }
-//                )
-//            }
         }
     }
 }

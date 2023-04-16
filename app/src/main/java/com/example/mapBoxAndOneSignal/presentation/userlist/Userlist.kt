@@ -89,7 +89,6 @@ fun Userlist(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
-//                .weight(1f),
                 state = scrollState,
             ) {
                 items(acceptedFriendRequestList.value) { item ->

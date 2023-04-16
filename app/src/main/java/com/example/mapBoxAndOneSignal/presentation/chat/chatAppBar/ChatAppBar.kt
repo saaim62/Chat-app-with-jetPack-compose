@@ -1,6 +1,5 @@
 package com.example.mapBoxAndOneSignal.presentation.chat.chatAppBar
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,17 +27,14 @@ fun ChatAppBar(
     onUserNameClick: (() -> Unit)? = null,
     onBackArrowClick: (() -> Unit)? = null,
     onUserProfilePictureClick: (() -> Unit)? = null,
-    onMoreDropDownBlockUserClick: (() -> Unit)? = null,
 ) {
-    val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
     SmallTopAppBar(
-        modifier = Modifier.statusBarsPadding(),
+        modifier = modifier.statusBarsPadding(),
 //        modifier = Modifier.align(Alignment.CenterStart),
         title = {
             Row {
                 Surface(
-                    modifier = Modifier.size(50.dp),
+                    modifier = modifier.size(50.dp),
                     shape = CircleShape,
                     color = Color.LightGray
                 ) {
@@ -48,7 +43,7 @@ fun ChatAppBar(
                             painter = rememberAsyncImagePainter(pictureUrl),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxHeight()
                                 .aspectRatio(1f)
                                 .clickable { onUserProfilePictureClick?.invoke() })
@@ -56,14 +51,14 @@ fun ChatAppBar(
                         Icon(
                             imageVector = Icons.Filled.Person,
                             contentDescription = null,
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxHeight()
                                 .aspectRatio(1f)
                                 .clickable { onUserProfilePictureClick?.invoke() })
                     }
                 }
                 Column(
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(start = MaterialTheme.spacing.small)
                         .clickable {
                             onUserNameClick?.invoke()
@@ -94,51 +89,5 @@ fun ChatAppBar(
                 )
             }
         },
-        actions = {
-            IconButton(
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        "Videochat Clicked.\n(Not Available)",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }) {
-                Icon(imageVector = Icons.Filled.VideoCall, contentDescription = null)
-            }
-            IconButton(
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        "Voicechat Clicked.\n(Not Available)",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }) {
-                Icon(imageVector = Icons.Filled.Call, contentDescription = null)
-            }
-            IconButton(
-                onClick = {
-                    expanded = true
-                }) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "Block User")
-                        },
-                        onClick = {
-                            onMoreDropDownBlockUserClick?.invoke()
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.PriorityHigh,
-                                contentDescription = null
-                            )
-                        }
-                    )
-                }
-            }
-        }
     )
 }
