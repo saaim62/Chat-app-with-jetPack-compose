@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "754944979036",
+    "project_id": "mapbox-and-onesignal",
+    "storage_bucket": "mapbox-and-onesignal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754944979036:android:d8019598455ba223627699",
+        "android_client_info": {
+          "package_name": "com.android.app.mapBoxAndOneSignal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754944979036-q8r38uuklifot11g1ram15aprvgi860o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLu4ae2UnB9wE8b-dXOy2Uk5yHPEDc3ZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754944979036-q8r38uuklifot11g1ram15aprvgi860o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
