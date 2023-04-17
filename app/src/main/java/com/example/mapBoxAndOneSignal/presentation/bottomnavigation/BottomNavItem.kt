@@ -1,10 +1,7 @@
 package com.example.mapBoxAndOneSignal.presentation.bottomnavigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.DesignServices
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
@@ -13,6 +10,14 @@ sealed class BottomNavItem(
     var screen_route: String,
     var arguments: String
 ) {
+    object LogIn : BottomNavItem(
+        "LogIn",
+        Icons.Filled.Login,
+        "LogIn",
+        ""
+    ) {
+        val fullRoute = screen_route + arguments
+    }
     object UI : BottomNavItem(
         "UI",
         Icons.Filled.DesignServices,

@@ -42,10 +42,6 @@ object AppModule {
     @Provides
     fun provideFirebaseDatabaseInstance() = FirebaseDatabase.getInstance()
 
-//    @Provides
-//    fun provideSharedPreferences(application: Application) =
-//        application.getSharedPreferences("login", Context.MODE_PRIVATE)
-
     @Provides
     fun providesDataStore(application: Application) = application.dataStore
 
@@ -77,7 +73,6 @@ object AppModule {
     fun provideAuthScreenUseCase(authRepository: AuthScreenRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticatedInFirebase(authRepository),
         signIn = SignIn(authRepository),
-        signUp = SignUp(authRepository)
     )
 
     @Provides

@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.mapBoxAndOneSignal.presentation.auth.signIn.LogInScreen
 import com.example.mapBoxAndOneSignal.presentation.chat.ChatScreen
 import com.example.mapBoxAndOneSignal.presentation.designScreen.UIScreen
 import com.example.mapBoxAndOneSignal.presentation.profile.ProfileScreen
@@ -28,7 +29,33 @@ fun NavGraph(
     snackbarHostState: SnackbarHostState,
     keyboardController: SoftwareKeyboardController
 ) {
-    AnimatedNavHost(navController, startDestination = BottomNavItem.MapBox.fullRoute) {
+    AnimatedNavHost(navController, startDestination = BottomNavItem.LogIn.fullRoute) {
+        composable(
+            BottomNavItem.LogIn.fullRoute,
+            arguments = listOf(
+                navArgument("emailFromSignUp") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            ),
+            enterTransition = {
+                when (initialState.destination.route) {
+                    else -> null
+                }
+
+            }
+        ) {
+            val emailFromSignUp = remember {
+                it.arguments?.getString("emailFromSignUp")
+            }
+
+            LogInScreen(
+                emailFromSignUp = emailFromSignUp ?: "",
+                navController = navController,
+                snackbarHostState = snackbarHostState,
+                keyboardController = keyboardController
+            )
+        }
 
         composable(
             BottomNavItem.MapBox.fullRoute,

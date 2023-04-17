@@ -23,8 +23,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ChatScreenRepositoryImpl(
+@Singleton
+class ChatScreenRepositoryImpl  @Inject constructor(
     private val auth: FirebaseAuth,
     private val database: FirebaseDatabase
 ) : ChatScreenRepository {

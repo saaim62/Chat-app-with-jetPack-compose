@@ -5,9 +5,6 @@ import com.example.mapBoxAndOneSignal.core.Constants.NO_CHATROOM_IN_FIREBASE_DAT
 import com.example.mapBoxAndOneSignal.domain.model.*
 import com.example.mapBoxAndOneSignal.domain.repository.UserListScreenRepository
 import com.example.mapBoxAndOneSignal.utils.Response
-import com.example.mapBoxAndOneSignal.domain.model.ChatMessage
-import com.example.mapBoxAndOneSignal.domain.model.FriendListRegister
-import com.example.mapBoxAndOneSignal.domain.model.FriendListRow
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,10 +26,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.collections.HashMap
 
-class UserListScreenRepositoryImpl(
+class UserListScreenRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val database: FirebaseDatabase,
 ) : UserListScreenRepository {
@@ -186,19 +181,16 @@ class UserListScreenRepositoryImpl(
     override suspend fun searchUserFromFirebase(userEmail: String): Flow<Response<User?>> =
         callbackFlow {
             try {
-
                 this@callbackFlow.trySendBlocking(Response.Loading)
 
                 val databaseReference = database.getReference("Profiles")
-
                 var user: User?
+                var flagForControl = false
 
                 databaseReference.get().addOnSuccessListener {
-                    var flagForControl = false
-
                     val myJob = launch {
                         for (i in it.children) {
-                            user = i.child("profile").getValue(User::class.java)!!
+                            user = i.child("profile").getValue(User::class.java)
                             if (user?.userEmail == userEmail) {
                                 flagForControl = true
                                 this@callbackFlow.trySendBlocking(Response.Success(user))
@@ -211,20 +203,21 @@ class UserListScreenRepositoryImpl(
                             this@callbackFlow.trySendBlocking(Response.Success(null))
                         }
                     }
-
                 }.addOnFailureListener {
                     this@callbackFlow.trySendBlocking(Response.Error(it.message ?: ERROR_MESSAGE))
                 }
 
                 awaitClose {
                     channel.close()
-                    cancel()
                 }
-
             } catch (e: Exception) {
                 this@callbackFlow.trySendBlocking(Response.Error(e.message ?: ERROR_MESSAGE))
+            } finally {
+                cancel()
             }
         }
+
+
 
     override suspend fun checkChatRoomExistedFromFirebase(acceptorUUID: String): Flow<Response<String>> =
         callbackFlow {

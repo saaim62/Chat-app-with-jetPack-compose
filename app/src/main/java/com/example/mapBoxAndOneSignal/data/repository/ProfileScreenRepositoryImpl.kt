@@ -21,8 +21,11 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ProfileScreenRepositoryImpl (
+@Singleton
+class ProfileScreenRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val database: FirebaseDatabase,
     private val storage: FirebaseStorage

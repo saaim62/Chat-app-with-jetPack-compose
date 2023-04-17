@@ -37,15 +37,15 @@ class ProfileViewModel @Inject constructor(
 
     //PUBLIC FUNCTIONS
 
-    fun setUserStatusToFirebaseAndSignOut(userStatus: UserStatus){
+    fun setUserStatusToFirebaseAndSignOut(userStatus: UserStatus) {
         viewModelScope.launch {
-            useCases.setUserStatusToFirebase(userStatus).collect{ response ->
-                when(response){
+            useCases.setUserStatusToFirebase(userStatus).collect { response ->
+                when (response) {
                     is Response.Loading -> {}
                     is Response.Success -> {
-                        if(response.data){
+                        if (response.data) {
                             signOut()
-                        }else{
+                        } else {
                             //Auth.currentuser null.
                         }
 
@@ -59,7 +59,7 @@ class ProfileViewModel @Inject constructor(
     fun uploadPictureToFirebase(uri: Uri) {
         viewModelScope.launch {
             useCases.uploadPictureToFirebase(uri).collect { response ->
-                when(response){
+                when (response) {
                     is Response.Loading -> {
                         isLoading.value = true
                     }
@@ -67,7 +67,8 @@ class ProfileViewModel @Inject constructor(
                         //Picture Uploaded
                         isLoading.value = false
                         updateProfileToFirebase(
-                            User(userProfilePictureUrl = response.data))
+                            User(userProfilePictureUrl = response.data)
+                        )
                     }
                     is Response.Error -> {}
                 }
@@ -79,19 +80,18 @@ class ProfileViewModel @Inject constructor(
     fun updateProfileToFirebase(myUser: User) {
         viewModelScope.launch {
             useCases.createOrUpdateProfileToFirebase(myUser).collect { response ->
-                when(response){
+                when (response) {
                     is Response.Loading -> {
                         toastMessage.value = ""
                         isLoading.value = true
                     }
                     is Response.Success -> {
                         isLoading.value = false
-                        if(response.data){
+                        if (response.data) {
                             toastMessage.value = "Profile Updated"
-                        }else{
+                        } else {
                             toastMessage.value = "Profile Saved"
                         }
-                        //delay(2000) //Bu ne içindi hatırlayamadım.
                         loadProfileFromFirebase()
                     }
                     is Response.Error -> {
@@ -108,7 +108,7 @@ class ProfileViewModel @Inject constructor(
     private fun signOut() {
         viewModelScope.launch {
             useCases.signOut().collect { response ->
-                when(response) {
+                when (response) {
                     is Response.Loading -> {
                         toastMessage.value = ""
                     }
@@ -126,7 +126,7 @@ class ProfileViewModel @Inject constructor(
     private fun loadProfileFromFirebase() {
         viewModelScope.launch {
             useCases.loadProfileFromFirebase().collect { response ->
-                when(response){
+                when (response) {
                     is Response.Loading -> {
                         isLoading.value = true
                     }

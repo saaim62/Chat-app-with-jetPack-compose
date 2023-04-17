@@ -70,14 +70,14 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
 
-    val updatedImage by remember {
+    var updatedImage by remember {
         mutableStateOf<Uri?>(null)
     }
     val isUserSignOut = profileViewModel.isUserSignOutState.value
     LaunchedEffect(key1 = isUserSignOut) {
         if (isUserSignOut) {
             navController.popBackStack()
-            navController.navigate(BottomNavItem.Profile.fullRoute)
+            navController.navigate(BottomNavItem.LogIn.fullRoute)
         }
     }
     Column(
